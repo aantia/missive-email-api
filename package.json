@@ -6,6 +6,9 @@
   "scripts": {
     "test": "test"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aantia/missive-email-api.git"},
   "author": "Alexander Antia",
   "license": "ISC",
   "dependencies": {}
