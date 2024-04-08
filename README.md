@@ -2,7 +2,7 @@
 
 ## Description
 
-The Missive Email API is a package that provides functionality for drafting and/or sending emails using Missive.
+The Missive Email API is a package that provides functionality for drafting and/or sending emails using Missive. No dependencies.
 
 ## Features
 
