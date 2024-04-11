@@ -6,9 +6,9 @@ const https = require('https');
  * @param {string} token - A `Bearer` token for the Missive API
  * @param {string} body - The body of the email - `<b>html</b>` or plain text
  * @param {string} subject - The subject of the email
- * @param {Object} to - The recipient of the email
- * @param {string} to.name - The readable name of the recipient of the email
- * @param {string} to.address - The email address of the recipient of the email
+ * @param {(Object|Object[])} to - The recipient(s) of the email. Can be a single object or an array.
+ * @param {string} to.name - The readable name of the recipient of the email.
+ * @param {string} to.address - The email address of the recipient of the email.
  * @param {Object} from - The sender of the email
  * @param {string} from.name - The readable name of the sender of the email
  * @param {string} from.address - The email address of the sender of the email
@@ -20,12 +20,13 @@ const https = require('https');
  * @returns {Promise<Object>} - A promise that resolves with the response from the HTTPS request
  */
 async function createEmail(token, body, subject, to, from, reference, labels, send = false, attachments = [], logger = null) {
+  to = Array.isArray(to) ? to : [to];
   const email = {
     drafts: {
       send: send,
       subject: subject,
       body: body,
-      to_fields: [to],
+      to_fields: to,
       from_field: from,
       references: [reference],
       attachments: attachments,
