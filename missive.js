@@ -12,15 +12,18 @@ const https = require('https');
  * @param {Object} from - The sender of the email
  * @param {string} from.name - The readable name of the sender of the email
  * @param {string} from.address - The email address of the sender of the email
- * @param {string} reference - The email address that started the conversation - optional
- * @param {string[]} labels - Any labels to attach to the conversation - optional
+ * @param {string} team - The team ID of the team the email is being sent from
+ * @param {string} org - The organisation ID of our company
+ * @param {string} [reference] - The email address that started the conversation - optional
+ * @param {string[]} [labels] - Any labels to attach to the conversation - optional
  * @param {boolean} [send=false] - Whether to send the email; default will create a draft on Missive - optional
  * @param {Array<{base64_data: string, filename: string}>} [attachments] - An array of attachment objects. NB the total payload must be <=10MB - optional
  * @param {Object} [logger=null] - An object with an `info` method to log interactions - optional
  * @returns {Promise<Object>} - A promise that resolves with the response from the HTTPS request
  */
-async function createEmail(token, body, subject, to, from, reference, labels, send = false, attachments = [], logger = null) {
+async function createEmail(token, body, subject, to, from, team, org, reference=null, labels=null, send = false, attachments = [], logger = null) {
   to = Array.isArray(to) ? to : [to];
+  body = body.replace(/(?:\r\n|\r|\n)/g, '<br>');
   const email = {
     drafts: {
       send: send,
@@ -28,9 +31,11 @@ async function createEmail(token, body, subject, to, from, reference, labels, se
       body: body,
       to_fields: to,
       from_field: from,
-      references: [reference],
+      team: team,
+      organization: org,
+      ...(reference ? { references: [reference] } : {}),
       attachments: attachments,
-      add_shared_labels: labels,
+      ...(labels ? {add_shared_labels: labels} : {}),
     },
   };
 
